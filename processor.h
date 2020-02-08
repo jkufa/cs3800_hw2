@@ -21,6 +21,7 @@ namespace Computer
     private:
       // seed to seed the random num generator
       unsigned long seed;
+      std::string inputfile;
       // Add your own variables to manage processes and threads
     public:
       // Constructor with filename of input file
