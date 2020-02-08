@@ -37,7 +37,7 @@ namespace Computer
       unsigned long ProcessTime() const;
       // Time left to process
       unsigned long TimeLeft() const;
-      // Process this Instruction for <time> PUs
+      // Process this Instruction for <time> Process Units [PUs]
       unsigned long Process(const unsigned long time = 0);
       // Id of this Instruction
       unsigned long Id() { return id; }
