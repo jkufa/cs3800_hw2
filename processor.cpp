@@ -8,8 +8,8 @@
 Computer::Processor::Processor(const std::string & filename)
 {
   inputfile = filename;
-  seed = 0;
-
+  seed = rand();
+  threadNum = rand();
 }
 
 Computer::Processor::Processor(const Computer:: Processor & copy)
@@ -25,9 +25,8 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
   return *this;
 }
 
-Computer::Processor Start()
+void Computer::Processor::Start()
 {
-  
 }
 
 

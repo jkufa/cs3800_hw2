@@ -15,7 +15,6 @@ int main(int argc, char** argv)
   {
     throw std::invalid_argument("No input file given");
   }
-
   // construct the processor
   Computer::Processor p(argv[1]);
   // seed the generator

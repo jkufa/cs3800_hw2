@@ -8,6 +8,7 @@
 
 #include <queue>
 #include <array>
+#include <list>
 #include "process.h"
 #include <thread>
 
@@ -22,6 +23,8 @@ namespace Computer
       // seed to seed the random num generator
       unsigned long seed;
       std::string inputfile;
+      unsigned int threadNum; //track number of threads
+      std::list<Process> processes; //use to keep track of queue
       // Add your own variables to manage processes and threads
     public:
       // Constructor with filename of input file

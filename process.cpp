@@ -37,33 +37,39 @@ Computer::Process & Computer::Process::operator=(const Computer::Process & copy)
   id = copy.id;
   processState = copy.processState;
   currInstruction = copy.currInstruction;
-  return *this
+  return *this;
 }
 
 // Ostream
-//Computer::Process & std::ostream::operator<<(std::ostream & out, const Computer::Process & p)
+std::ostream & Computer::operator<<(std::ostream & out, const Computer::Process & p)
+{
+  for(int i = 0; i < p.instructions.size, i++;) 
+  {
+    out << "Process " << p.id << ": " << p.NumInstructions << " " 
+        << p.RemainingInstructionTime << "/" + p.TotalInstructionTime ; 
+  }
+}
 
-Computer::Process StartProcessing()
+void Computer::Process::StartProcessing()
+{
+}
+
+void Computer::Process::StopProcessing() 
 {
 
 }
 
-Computer::Process StopProcessing() 
+bool Computer::Process::ProcessUnit(unsigned long pu)
+{
+  return (pu > 0) ? false : true;
+}
+
+unsigned long Computer::Process::RemainingInstructionTime() const
 {
 
 }
 
-Computer::Process ProcessUnit()
-{
-
-}
-
-Computer::Process RemainingInstructionTIme() 
-{
-
-}
-
-Computer::Process TotalInstructionTime() 
+unsigned long Computer::Process::TotalInstructionTime() const
 {
 
 }
