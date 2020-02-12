@@ -23,8 +23,10 @@ namespace Computer
       // seed to seed the random num generator
       unsigned long seed;
       std::string inputfile;
-      unsigned int threadNum; //track number of threads
-      std::list<Process> processes; //use to keep track of queue
+      unsigned int instructionNum; //track number of instructions
+      unsigned int processNum; 
+      std::vector<int> instructionTimes; //contains instruction times
+      std::vector<int> processes;
       // Add your own variables to manage processes and threads
     public:
       // Constructor with filename of input file

@@ -7,7 +7,7 @@
 Computer::Process::Process()
 {
   instructions; // fix
-  processIds = 0;
+  //processIds = 0;
   id = 0;
   processState = NotRunning;
   currInstruction = 0;
@@ -16,7 +16,7 @@ Computer::Process::Process()
 Computer::Process::Process(const std::vector<Instruction> & inst)
 {
   instructions = inst;
-  processIds = 0;
+  //processIds = 0;
   id = 0;
   processState = NotRunning;
   currInstruction = 0;
@@ -25,7 +25,7 @@ Computer::Process::Process(const std::vector<Instruction> & inst)
 Computer::Process::Process(const Computer::Process & copy)
 {
   instructions = copy.instructions;
-  processIds = copy.processIds;
+  //processIds = copy.processIds;
   id = copy.id;
   processState = copy.processState;
   currInstruction = copy.currInstruction;
@@ -34,7 +34,7 @@ Computer::Process::Process(const Computer::Process & copy)
 Computer::Process & Computer::Process::operator=(const Computer::Process & copy)
 {
   instructions = copy.instructions;
-  processIds = copy.processIds;
+  //processIds = copy.processIds;
   id = copy.id;
   processState = copy.processState;
   currInstruction = copy.currInstruction;
