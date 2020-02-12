@@ -22,6 +22,7 @@ Computer::Processor::Processor(const std::string & filename)
   
   for(int i = 0; i < processNum; i++) 
   {
+    processes.push_back(std::stoi(lines[i+index]));
     instructionNum = std::stoi(lines[index+i]);
     for(int j = 0; j < instructionNum; j++) 
     {
@@ -29,27 +30,35 @@ Computer::Processor::Processor(const std::string & filename)
       instructionTimes.push_back(std::stoi(lines[i+index]));
     }
   }
-  // for(int i = 0; i < instructionTimes.size(); i++) {
+  for(int i = 0; i < processes.size(); i++) {
 
-  //   std::cout << instructionTimes[i] << std::endl;
-  // }
+    std::cout << processes[i] << std::endl;
+    
+  }
 }
 
 Computer::Processor::Processor(const Computer:: Processor & copy)
 {
   inputfile = copy.inputfile;
   seed = copy.seed;
+  processNum = copy.processNum;
+  instructionNum = copy.instructionNum;
+  instructionTimes = copy.instructionTimes;
 }
 
 Computer::Processor & Computer::Processor::operator=(const Computer:: Processor & copy)
 {
   inputfile = copy.inputfile;
   seed = copy.seed;
+  processNum = copy.processNum;
+  instructionNum = copy.instructionNum;
+  instructionTimes = copy.instructionTimes;
   return *this;
 }
 
 void Computer::Processor::Start()
 {
+
 }
 
 

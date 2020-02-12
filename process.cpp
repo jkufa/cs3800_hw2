@@ -20,6 +20,10 @@ Computer::Process::Process(const std::vector<Instruction> & inst)
   id = 0;
   processState = NotRunning;
   currInstruction = 0;
+
+  for(int i = 0; i < instructions.size(); i++) {
+
+  }
 }
 
 Computer::Process::Process(const Computer::Process & copy)
@@ -69,9 +73,18 @@ bool Computer::Process::ProcessUnit(unsigned long pu)
 
 unsigned long Computer::Process::RemainingInstructionTime() const
 {
+  long currentInstruction = 0;
+  for(int i = 0; i < instructions.size(); i++) {
+    currentInstruction += instructions[i].TimeLeft();
+  }
+  return currInstruction;
 }
 
 unsigned long Computer::Process::TotalInstructionTime() const
 {
-
+  long totalInstructionTime;
+  for(int i = 0; i <  instructions.size(); i++) {
+     totalInstructionTime += instructions[i].ProcessTime();
+  }
+  return totalInstructionTime;
 }

@@ -27,6 +27,8 @@ namespace Computer
       unsigned int processNum; 
       std::vector<int> instructionTimes; //contains instruction times
       std::vector<int> processes;
+      //2D vector that stores vector of processes that contain instructions
+      std::vector<std::vector<int>>  processesToInstructions; 
       // Add your own variables to manage processes and threads
     public:
       // Constructor with filename of input file
@@ -40,6 +42,5 @@ namespace Computer
       // Start the Processor
       void Start();
   };
-
 }
 #endif
