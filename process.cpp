@@ -58,16 +58,19 @@ std::ostream & Computer::operator<<(std::ostream & out, const Computer::Process 
 
 void Computer::Process::StartProcessing()
 {
-  
+  processState = Running; 
 }
 
 void Computer::Process::StopProcessing() 
 {
-
+  processState = NotRunning;
 }
 
 bool Computer::Process::ProcessUnit(unsigned long pu)
 {
+  for(int i = 0; i < instructions.size(); i++ ) {
+    instructions[i].Process(pu);
+  }
   return (pu > 0) ? false : true;
 }
 
