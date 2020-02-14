@@ -24,7 +24,7 @@ namespace Computer
       unsigned long seed;
       std::string inputfile;
       unsigned int instructionNum; //track number of instructions
-      unsigned int processNum; 
+      unsigned int processNum; //track number of processes
       std::vector<int> instructionTimes; //contains instruction times
       std::vector<int> processes;
       //2D vector that stores vector of processes that contain instructions
