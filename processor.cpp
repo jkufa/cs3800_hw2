@@ -55,28 +55,55 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
 
 void Computer::Processor::Start()
 {
-  unsigned int processCounter = 0; // Keep track of how many process are left
+  unsigned int processCounter = 0; // Track of how many process are left
+  unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
+  unsigned int currentProcessSize;
   // int currentProcesses[3] = {}; // Only 3 processes at a time
   std::vector<std::vector<int>> currentProcesses; // Only 3 processes at a time
   int processUnits = rand() % 100 + 1;
-  Computer::Process process; //Construct process
+  std::vector<Computer::Process> processes; //Construct process
 
   std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
-  if(processCounter <  processesInstructions.size()) 
+  while(processCounter <  processesInstructions.size()) 
   {
-    while(currentProcesses.size() < 3) 
+    while(currentProcesses.size() < 3 && processRemainder != 0) 
     {
-      for(int i = 0; i < 3; i++) 
-      {
-        currentProcesses.push_back(processesInstructions[processCounter]);
-        processCounter++;
+      if(processRemainder > 3) {
+        for(int i = 0; i < 3; i++) 
+        {
+          // Only add 3 processes
+          currentProcesses.push_back(processesInstructions[processCounter]);
+          processCounter++;
+          processRemainder--;
+        }
       }
-    }
-    for(int i = 0; i < 3; i++) {
+      else 
+      {
+        for(unsigned int i = 0; i < processRemainder; i++) 
+        {
+          currentProcesses.push_back(processesInstructions[processCounter]);
+          processCounter++;
+          processRemainder--;
+        }
+      }
+      }
+      /* start running */
+    currentProcessSize = currentProcesses.size();
+    for(unsigned int i = 0; i < currentProcessSize; i++) {
       /*Process Shit*/
-      process.
+      processes[i].StartProcessing();
+      processes[i].Id = i;
+      // processes[i] = currentProcesses[i];
+      for(int j = 0; j < processesInstructions[i].size(); j++) {
+        processes[i].CurrentInstruction = processesInstructions[i][j];
+      }
+      processes[i].ProcessUnit(processUnits);
+    }
+    /* Erase current processes once they're finished */
+    for(unsigned int i = 0; i < currentProcessSize; i++) {
+      currentProcesses.erase(currentProcesses.begin());
     }
 
   }
-    std::cout << process;
+    std::cout << processes[1];
 }

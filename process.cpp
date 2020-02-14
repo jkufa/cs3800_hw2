@@ -15,12 +15,6 @@ Computer::Process::Process()
 Computer::Process::Process(const std::vector<Instruction> & inst)
 {
   instructions = inst;
-  // id = Process::processIds++;
-  processState = NotRunning;
-  currInstruction = 0;
-
-  for(long unsigned int i = 0; i < instructions.size(); i++) {
-  }
 }
 
 Computer::Process::Process(const Computer::Process & copy)
@@ -60,11 +54,12 @@ void Computer::Process::StopProcessing()
 
 bool Computer::Process::ProcessUnit(unsigned long pu)
 {
-  unsigned long pu_remainder = 1; // initialize remainder to be > 0 
-  while(pu_remainder > 0) {
-    for(long unsigned int i = 0; i < instructions.size(); i++ ) {
-      pu_remainder = instructions[i].Process(pu);
-    }
+  unsigned long pu_remainder = 1; // Initialize remainder to be > 0 
+  unsigned long instruction_counter = 0; // Track # of instructions 
+  while(pu_remainder > 0) 
+  {
+    pu_remainder = instructions[instruction_counter].Process(pu_remainder);
+    instruction_counter++;
   }
   return (pu_remainder > 0) ? false : true;
 }
