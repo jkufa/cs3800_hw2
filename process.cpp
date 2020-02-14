@@ -3,12 +3,11 @@
  */
 #include "process.h"
 #include "instruction.h"
+#include <iostream>
 
 Computer::Process::Process()
 {
-  instructions; // fix
-  //processIds = 0;
-  id = 0;
+  // id = Process::processIds++;
   processState = NotRunning;
   currInstruction = 0;
 }
@@ -16,8 +15,7 @@ Computer::Process::Process()
 Computer::Process::Process(const std::vector<Instruction> & inst)
 {
   instructions = inst;
-  //processIds = 0;
-  id = 0;
+  // id = Process::processIds++;
   processState = NotRunning;
   currInstruction = 0;
 
@@ -28,7 +26,6 @@ Computer::Process::Process(const std::vector<Instruction> & inst)
 Computer::Process::Process(const Computer::Process & copy)
 {
   instructions = copy.instructions;
-  //processIds = copy.processIds;
   id = copy.id;
   processState = copy.processState;
   currInstruction = copy.currInstruction;
@@ -37,7 +34,6 @@ Computer::Process::Process(const Computer::Process & copy)
 Computer::Process & Computer::Process::operator=(const Computer::Process & copy)
 {
   instructions = copy.instructions;
-  //processIds = copy.processIds;
   id = copy.id;
   processState = copy.processState;
   currInstruction = copy.currInstruction;
@@ -47,15 +43,9 @@ Computer::Process & Computer::Process::operator=(const Computer::Process & copy)
 // Ostream
 std::ostream & Computer::operator<<(std::ostream & out, const Computer::Process & p)
 {
-  for(long unsigned int i = 0; i < p.instructions.size(), i++;) 
-  {
-    // fix
-    out << "----- " << p.instructions << " Pus ------ ";
-    // for(int i = 0; i < /*number of process*/; i++) {
-    //   out << "Process - " << p.id << ": " << p.NumInstructions << " " 
-    //     << p.RemainingInstructionTime << "/" << p.TotalInstructionTime;
-    // }
-  }
+  std::cout << "Process - " << p.id << ": " << p.NumInstructionsLeft() << " " 
+    << p.RemainingInstructionTime() << "/" << p.TotalInstructionTime() << std::endl;
+  return out;
 }
 
 void Computer::Process::StartProcessing()

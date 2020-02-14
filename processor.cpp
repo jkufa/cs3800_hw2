@@ -23,13 +23,13 @@ Computer::Processor::Processor(const std::string & filename)
   {
     std::vector<int> processVect; // Empty vector to act as index #
     // Insert processNum size empty vector
-    processesToInstructions.push_back(processVect); 
+    processesInstructions.push_back(processVect); 
     instructionNum = std::stoi(lines[index+i]);
     for(unsigned int j = 0; j < instructionNum; j++) 
     {
       index++;
       // Create vector of instructionTimes
-      processesToInstructions[i].push_back(std::stoi(lines[i+index]));
+      processesInstructions[i].push_back(std::stoi(lines[i+index]));
     }
   }
 }
@@ -40,7 +40,7 @@ Computer::Processor::Processor(const Computer:: Processor & copy)
   seed = copy.seed;
   processNum = copy.processNum;
   instructionNum = copy.instructionNum;
-  processesToInstructions = copy.processesToInstructions;
+  processesInstructions = copy.processesInstructions;
 }
 
 Computer::Processor & Computer::Processor::operator=(const Computer:: Processor & copy)
@@ -49,11 +49,34 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
   seed = copy.seed;
   processNum = copy.processNum;
   instructionNum = copy.instructionNum;
-  processesToInstructions = copy.processesToInstructions;
+  processesInstructions = copy.processesInstructions;
   return *this;
 }
 
 void Computer::Processor::Start()
 {
-  
+  unsigned int processCounter = 0; // Keep track of how many process are left
+  // int currentProcesses[3] = {}; // Only 3 processes at a time
+  std::vector<std::vector<int>> currentProcesses; // Only 3 processes at a time
+  int processUnits = rand() % 100 + 1;
+  Computer::Process process; //Construct process
+
+  std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
+  if(processCounter <  processesInstructions.size()) 
+  {
+    while(currentProcesses.size() < 3) 
+    {
+      for(int i = 0; i < 3; i++) 
+      {
+        currentProcesses.push_back(processesInstructions[processCounter]);
+        processCounter++;
+      }
+    }
+    for(int i = 0; i < 3; i++) {
+      /*Process Shit*/
+      process.
+    }
+
+  }
+    std::cout << process;
 }

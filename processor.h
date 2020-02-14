@@ -25,8 +25,8 @@ namespace Computer
       std::string inputfile;
       unsigned int instructionNum; //track number of instructions
       unsigned int processNum; //track number of processes
-      //2D vector that stores vector of processes that contain instructions
-      std::vector<std::vector<int>>  processesToInstructions; 
+      // Vector that stores vectors of processes that contain instructions
+      std::vector<std::vector<int>>  processesInstructions; 
       // Add your own variables to manage processes and threads
     public:
       // Constructor with filename of input file
@@ -39,6 +39,10 @@ namespace Computer
       unsigned long Seed() const { return seed; } 
       // Start the Processor
       void Start();
+      // Return processesInstructions
+      std::vector<std::vector<int>>  ProcessesInstructions(const 
+        std::vector<std::vector<int>> &  processesInstructions)
+          { return processesInstructions;}
   };
 }
 #endif
