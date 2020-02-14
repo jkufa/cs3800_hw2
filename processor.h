@@ -25,8 +25,6 @@ namespace Computer
       std::string inputfile;
       unsigned int instructionNum; //track number of instructions
       unsigned int processNum; //track number of processes
-      std::vector<int> instructionTimes; //contains instruction times
-      std::vector<int> processes;
       //2D vector that stores vector of processes that contain instructions
       std::vector<std::vector<int>>  processesToInstructions; 
       // Add your own variables to manage processes and threads

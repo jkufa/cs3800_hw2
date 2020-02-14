@@ -21,32 +21,17 @@ Computer::Processor::Processor(const std::string & filename)
   processNum = std::stoi(lines[1]);
   for(long unsigned int i = 0; i < processNum; i++) 
   {
-    processes.push_back(std::stoi(lines[i+index]));
-    processesToInstructions.push_back(processes);
+    std::vector<int> processVect; // Empty vector to act as index #
+    // Insert processNum size empty vector
+    processesToInstructions.push_back(processVect); 
     instructionNum = std::stoi(lines[index+i]);
     for(unsigned int j = 0; j < instructionNum; j++) 
     {
       index++;
       // Create vector of instructionTimes
       processesToInstructions[i].push_back(std::stoi(lines[i+index]));
-      std::cout << "at: " << processesToInstructions[i][j] << std::endl;
-      std::cout << "adding: " << std::stoi(lines[i+index]) << " to vector" << std::endl;
-      instructionTimes.push_back(std::stoi(lines[i+index]));
     }
   }
-  for(long unsigned int i = 0; i < processes.size(); i++) 
-  {
-      // std::cout << "vector " << i << " has " << processesToInstructions[i].size() << " instructions" << std::endl;
-      // std::cout << "vector " << i << " instructions: " << std::endl;
-      // for(int j = 0; j < processesToInstructions[i].size(); j++) {
-      //   std::cout << processesToInstructions[i][j] << std::endl;
-      // }
-    //std::cout << processes[i] << std::endl;
-    
-  }
-  // for(int i = 0; i < instructionTimes.size(); i++) {
-  //   std::cout << instructionTimes[i] <<std::endl;
-  // }
 }
 
 Computer::Processor::Processor(const Computer:: Processor & copy)
@@ -55,7 +40,7 @@ Computer::Processor::Processor(const Computer:: Processor & copy)
   seed = copy.seed;
   processNum = copy.processNum;
   instructionNum = copy.instructionNum;
-  instructionTimes = copy.instructionTimes;
+  processesToInstructions = copy.processesToInstructions;
 }
 
 Computer::Processor & Computer::Processor::operator=(const Computer:: Processor & copy)
@@ -64,7 +49,7 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
   seed = copy.seed;
   processNum = copy.processNum;
   instructionNum = copy.instructionNum;
-  instructionTimes = copy.instructionTimes;
+  processesToInstructions = copy.processesToInstructions;
   return *this;
 }
 
