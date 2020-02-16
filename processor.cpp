@@ -66,7 +66,8 @@ void Computer::Processor::Start()
   std::vector<Computer::Process> currentProcesses; 
   // When processes don't get finished they go here
   std::vector<Computer::Process> priorityQueue; 
-  std::vector<Computer::Process> processes; //Construct process
+  //Construct process
+  std::vector<Computer::Process> processes; 
 
   while(!allProcessesDone) 
   {
