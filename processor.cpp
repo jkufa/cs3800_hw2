@@ -62,7 +62,10 @@ void Computer::Processor::Start()
   unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
   unsigned int currentProcessSize;
   int processUnits = rand() % 100 + 1;
-  std::vector<Computer::Process> currentProcesses; // Only 3 processes at a time
+  // Only 3 processes at a time
+  std::vector<Computer::Process> currentProcesses; 
+  // When processes don't get finished they go here
+  std::vector<Computer::Process> priorityQueue; 
   std::vector<Computer::Process> processes; //Construct process
 
   std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
@@ -78,11 +81,22 @@ void Computer::Processor::Start()
   /* PROCESSING */
   while(processCounter[0] <  processesInstructions.size() && processUnits > 0) 
   {
+    if(priorityQueue.size() != 0) 
+    {
+      int currentQueueSize = priorityQueue.size();
+      for(int i = 0; i < currentQueueSize; i++) 
+      {
+        currentProcesses.push_back(priorityQueue.front());
+        priorityQueue.erase(priorityQueue.begin());
+      }
+    }
     while(currentProcesses.size() < 3 && processRemainder != 0) 
     {
+      // Check for process carried over from priorty queue
+      int availableThreads = 3 - currentProcesses.size();
       if(processRemainder > 3) 
       {
-        for(int i = 0; i < 3; i++) 
+        for(int i = 0; i < availableThreads; i++) 
         {
           // Add the next 3 current processes to queue
           currentProcesses.push_back(processesInstructions[processCounter[0]]);
@@ -100,29 +114,29 @@ void Computer::Processor::Start()
           processRemainder--;
         }
       }
-
-      /*Run ProcessUnit */
-      bool doneProcessing = false;
-      while(doneProcessing == false)
-      {
-        for(int i = 0; i < currentProcesses.size(); i++) 
-        {
-            currentProcesses[i].StartProcessing();
-            doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
-            std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
-            processCounter[1]++;
-        }
-      }
-
-      /* Erase current processes once they're finished */
-      currentProcessSize = currentProcesses.size();
-      for(unsigned int i = 0; i < currentProcessSize; i++) {
-      currentProcesses.erase(currentProcesses.begin());
-      }
     }
 
-    // for(unsigned int i = 0; i < currentProcessSize; i++) {
-    //   std::cout << "Process - " << processes[i].Id() << " processing..." <<std::endl;
-    // }
+    /*Run ProcessUnit */
+    bool doneProcessing = false;
+    for(int i = 0; i < currentProcesses.size(); i++) 
+    {
+        currentProcesses[i].StartProcessing();
+        std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
+        doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
+        if(!doneProcessing) 
+        {
+          // Keep process in queue and update remianing instructions
+          priorityQueue.push_back(currentProcesses[i]);
+          priorityQueue[i].StopProcessing();
+        }
+        currentProcesses[i].StopProcessing();
+        processCounter[1]++;
+    }
+    // Decrement counter by the number of unfinished processes
+    processCounter[1] = processCounter[1] - priorityQueue.size();
+    
+
+    /* Erase current processes once they're finished */
+    currentProcesses.clear();
   }
 }
