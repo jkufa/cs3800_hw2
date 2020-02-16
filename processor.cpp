@@ -56,87 +56,109 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
 void Computer::Processor::Start()
 {
   // Track of how many processes are left. Need 2 seperate counters, one
-  // for the current pushing the current processes onto the queue and 
-  // the other for printing the current process number
+  // for pushing the current processes onto the queue and the other for 
+  // printing the current process number
   unsigned int processCounter[2] = {0,0}; 
   unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
-  unsigned int currentProcessSize;
-  int processUnits = rand() % 100 + 1;
+  int processUnits;
+  bool allProcessesDone = false;
   // Only 3 processes at a time
   std::vector<Computer::Process> currentProcesses; 
   // When processes don't get finished they go here
   std::vector<Computer::Process> priorityQueue; 
   std::vector<Computer::Process> processes; //Construct process
 
-  std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
-
-  // Create list of processes with values
-  for(unsigned int i = 0; i < processesInstructions.size(); i++) 
+  while(!allProcessesDone) 
   {
-    processes.push_back(processesInstructions[i]);
-    std::cout << processes[i];  // Output all processes
-  }
-  std::cout << std::endl;
+    // Seed PUs
+    processUnits = rand() % 100 + 1;
 
-  /* PROCESSING */
-  while(processCounter[0] <  processesInstructions.size() && processUnits > 0) 
-  {
-    if(priorityQueue.size() != 0) 
+    std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
+
+    // Create list of processes with values
+    for(unsigned int i = 0; i < processesInstructions.size(); i++) 
     {
-      int currentQueueSize = priorityQueue.size();
-      for(int i = 0; i < currentQueueSize; i++) 
-      {
-        currentProcesses.push_back(priorityQueue.front());
-        priorityQueue.erase(priorityQueue.begin());
-      }
+      processes.push_back(processesInstructions[i]);
+      std::cout << processes[i];  // Output all processes
     }
-    while(currentProcesses.size() < 3 && processRemainder != 0) 
+    std::cout << std::endl;
+
+    /* PROCESSING */
+    // Grab current proccesses for processing
+    while(processUnits > 0) 
     {
-      // Check for process carried over from priorty queue
-      int availableThreads = 3 - currentProcesses.size();
-      if(processRemainder > 3) 
+      // Make sure there aren't any processes waiting in the queue
+      if(priorityQueue.size() != 0) 
       {
-        for(int i = 0; i < availableThreads; i++) 
+        int currentQueueSize = priorityQueue.size();
+        for(int i = 0; i < currentQueueSize; i++) 
         {
-          // Add the next 3 current processes to queue
-          currentProcesses.push_back(processesInstructions[processCounter[0]]);
-          processCounter[0]++;
-          processRemainder--;
+          currentProcesses.push_back(priorityQueue.front());
+          priorityQueue.erase(priorityQueue.begin());
         }
       }
-      else
+      // Get 3 processes running
+      while(currentProcesses.size() < 3 && processRemainder != 0) 
       {
-        for(int i = 0; i < processRemainder; i++) 
+        // Check for process carried over from priorty queue
+        int availableThreads = 3 - currentProcesses.size();
+        if(processRemainder > 3) 
         {
-          // Add remaining processes to queue
-          currentProcesses.push_back(processesInstructions[processCounter[0]]);
-          processCounter[0]++;
-          processRemainder--;
+          for(int i = 0; i < availableThreads; i++) 
+          {
+            // Add the next 3 current processes to queue
+            currentProcesses.push_back(processesInstructions[processCounter[0]]);
+            processCounter[0]++;
+            processRemainder--;
+          }
+        }
+        // If there are less than 3 processes left, go here
+        else
+        {
+          for(int i = 0; i < processRemainder; i++) 
+          {
+            // Add remaining processes to queue
+            currentProcesses.push_back(processesInstructions[processCounter[0]]);
+            processCounter[0]++;
+            processRemainder--;
+          }
         }
       }
-    }
 
-    /*Run ProcessUnit */
-    bool doneProcessing = false;
-    for(int i = 0; i < currentProcesses.size(); i++) 
-    {
-        currentProcesses[i].StartProcessing();
-        std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
-        doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
-        if(!doneProcessing) 
-        {
-          // Keep process in queue and update remianing instructions
-          priorityQueue.push_back(currentProcesses[i]);
-          priorityQueue[i].StopProcessing();
-        }
-        currentProcesses[i].StopProcessing();
-        processCounter[1]++;
-    }
-    // Decrement counter by the number of unfinished processes
-    processCounter[1] = processCounter[1] - priorityQueue.size();
-    
+      /*Run ProcessUnit */
+      bool doneProcessing = false;
+      for(int i = 0; i < currentProcesses.size(); i++) 
+      {
+          currentProcesses[i].StartProcessing();
+          std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
+          doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
+          if(!doneProcessing) 
+          {
+            // Keep process in queue and update remianing instructions
+            priorityQueue.push_back(currentProcesses[i]);
+            priorityQueue[i].StopProcessing();
+          }
+          currentProcesses[i].StopProcessing();
+          // Ammend instruction times
+          int test = processes[processCounter[1]].RemainingInstructionTime();
+          int test2 = currentProcesses[i].RemainingInstructionTime();
 
-    /* Erase current processes once they're finished */
-    currentProcesses.clear();
+          processes.at(processCounter[1]) = currentProcesses[i];
+
+          processCounter[1]++;
+
+      }
+      // Decrement counter by the number of unfinished processes
+      processCounter[1] = processCounter[1] - priorityQueue.size();
+      // Erase current processes once they're finished
+      currentProcesses.clear();
+      // Reset PUs
+      processUnits = 0;
+      // Check to see if all processes have been completed
+      if(processCounter[1] == processesInstructions.size()) 
+      {
+        allProcessesDone = true;
+      }
+    }
   }
 }
