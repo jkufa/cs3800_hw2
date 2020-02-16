@@ -2,19 +2,23 @@
  * Written by: Jack Kufa
  */
 #include "process.h"
-#include "instruction.h"
 #include <iostream>
+
+unsigned long Computer::Process::processIds = 0;
 
 Computer::Process::Process()
 {
-  // id = Process::processIds++;
+  id = Process::processIds++;
   processState = NotRunning;
   currInstruction = 0;
 }
 
 Computer::Process::Process(const std::vector<Instruction> & inst)
 {
-  instructions = inst;
+    instructions = inst;
+    id = Process::processIds++;
+    processState = NotRunning;
+    currInstruction = 0;
 }
 
 Computer::Process::Process(const Computer::Process & copy)
@@ -54,14 +58,16 @@ void Computer::Process::StopProcessing()
 
 bool Computer::Process::ProcessUnit(unsigned long pu)
 {
-  unsigned long pu_remainder = 1; // Initialize remainder to be > 0 
-  unsigned long instruction_counter = 0; // Track # of instructions 
-  while(pu_remainder > 0) 
+  unsigned long pu_remainder = pu;
+  bool isFinished = Finished();
+  currInstruction = 0; // Track # of instructions 
+  while(pu_remainder > 0 && !isFinished) 
   {
-    pu_remainder = instructions[instruction_counter].Process(pu_remainder);
-    instruction_counter++;
+    pu_remainder = instructions[currInstruction].Process(pu_remainder);
+    currInstruction++;
+    isFinished = Finished();
   }
-  return (pu_remainder > 0) ? false : true;
+  return (isFinished);
 }
 
 unsigned long Computer::Process::RemainingInstructionTime() const
@@ -70,12 +76,12 @@ unsigned long Computer::Process::RemainingInstructionTime() const
   for(long unsigned int i = 0; i < instructions.size(); i++) {
     currentInstruction += instructions[i].TimeLeft();
   }
-  return currInstruction;
+  return currentInstruction;
 }
 
 unsigned long Computer::Process::TotalInstructionTime() const
 {
-  long totalInstructionTime;
+  long totalInstructionTime = 0;
   for(long unsigned int i = 0; i < instructions.size(); i++) {
      totalInstructionTime += instructions[i].ProcessTime();
   }

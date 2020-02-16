@@ -21,7 +21,7 @@ Computer::Processor::Processor(const std::string & filename)
   processNum = std::stoi(lines[1]);
   for(long unsigned int i = 0; i < processNum; i++) 
   {
-    std::vector<int> processVect; // Empty vector to act as index #
+    std::vector<Instruction> processVect; // Empty vector to act as index #
     // Insert processNum size empty vector
     processesInstructions.push_back(processVect); 
     instructionNum = std::stoi(lines[index+i]);
@@ -58,13 +58,22 @@ void Computer::Processor::Start()
   unsigned int processCounter = 0; // Track of how many process are left
   unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
   unsigned int currentProcessSize;
-  // int currentProcesses[3] = {}; // Only 3 processes at a time
-  std::vector<std::vector<int>> currentProcesses; // Only 3 processes at a time
   int processUnits = rand() % 100 + 1;
+  std::vector<Computer::Process> currentProcesses; // Only 3 processes at a time
   std::vector<Computer::Process> processes; //Construct process
 
   std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
-  while(processCounter <  processesInstructions.size()) 
+
+  // Create list of processes with values
+  for(unsigned int i = 0; i < processesInstructions.size(); i++) 
+  {
+    processes.push_back(processesInstructions[i]);
+    std::cout << processes[i];  // Output all processes
+  }
+  std::cout << std::endl;
+
+  /* PROCESSING */
+  while(processCounter <  processesInstructions.size() && processUnits > 0) 
   {
     while(currentProcesses.size() < 3 && processRemainder != 0) 
     {
@@ -73,37 +82,48 @@ void Computer::Processor::Start()
         {
           // Only add 3 processes
           currentProcesses.push_back(processesInstructions[processCounter]);
-          processCounter++;
-          processRemainder--;
         }
+        /*Run ProcessUnit */
+        for(int i = 0; i < currentProcesses.size(); i++) 
+        {
+          currentProcesses[i].StartProcessing();
+          bool test = currentProcesses[i].ProcessUnit(processUnits);
+          std::cout << "Process - " << processes[processCounter].Id() << " processing..." <<std::endl;
+          processCounter++;
+        }
+        processRemainder--;
       }
       else 
       {
         for(unsigned int i = 0; i < processRemainder; i++) 
         {
           currentProcesses.push_back(processesInstructions[processCounter]);
-          processCounter++;
-          processRemainder--;
         }
+        /*Run ProcessUnit */
+        for(int i = 0; i < currentProcesses.size(); i++) 
+        {
+          currentProcesses[i].StartProcessing();
+          bool test = currentProcesses[i].ProcessUnit(processUnits);
+          std::cout << "Process - " << processes[processCounter].Id() << " processing..." <<std::endl;
+          processCounter++;
+        }
+        processRemainder--;
       }
-      }
-      /* start running */
-    currentProcessSize = currentProcesses.size();
-    for(unsigned int i = 0; i < currentProcessSize; i++) {
-      /*Process Shit*/
-      processes[i].StartProcessing();
-      processes[i].Id = i;
-      // processes[i] = currentProcesses[i];
-      for(int j = 0; j < processesInstructions[i].size(); j++) {
-        processes[i].CurrentInstruction = processesInstructions[i][j];
-      }
-      processes[i].ProcessUnit(processUnits);
-    }
-    /* Erase current processes once they're finished */
-    for(unsigned int i = 0; i < currentProcessSize; i++) {
+      // /*Run ProcessUnit */
+      // for(int i = 0; i < currentProcesses.size(); i++) {
+      //   while(currentProcesses[i].ProcessUnit(processUnits)) {
+      //   }
+      // }
+
+      /* Erase current processes once they're finished */
+      currentProcessSize = currentProcesses.size();
+      for(unsigned int i = 0; i < currentProcessSize; i++) {
       currentProcesses.erase(currentProcesses.begin());
+      }
     }
 
+    // for(unsigned int i = 0; i < currentProcessSize; i++) {
+    //   std::cout << "Process - " << processes[i].Id() << " processing..." <<std::endl;
+    // }
   }
-    std::cout << processes[1];
 }
