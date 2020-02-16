@@ -109,6 +109,7 @@ void Computer::Processor::Start()
           {
             // Add the next 3 current processes to queue
             currentProcesses.push_back(processesInstructions[processCounter[0]]);
+
             processCounter[0]++;
             processRemainder--;
           }
@@ -116,10 +117,11 @@ void Computer::Processor::Start()
         // If there are less than 3 processes left, go here
         else
         {
-          for(int i = 0; i < processRemainder; i++) 
+          for(unsigned int i = 0; i < processRemainder; i++) 
           {
             // Add remaining processes to queue
             currentProcesses.push_back(processesInstructions[processCounter[0]]);
+
             processCounter[0]++;
             processRemainder--;
           }
@@ -128,7 +130,11 @@ void Computer::Processor::Start()
 
       /*Run ProcessUnit */
       bool doneProcessing = false;
-      for(int i = 0; i < currentProcesses.size(); i++) 
+      std::vector<int> processIds;
+      for(int i = 0; i < processes.size(); i++) {
+        processIds.push_back(i);
+      }
+      for(unsigned int i = 0; i < currentProcesses.size(); i++) 
       {
           currentProcesses[i].StartProcessing();
           std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
@@ -141,9 +147,6 @@ void Computer::Processor::Start()
           }
           currentProcesses[i].StopProcessing();
           // Ammend instruction times
-          int test = processes[processCounter[1]].RemainingInstructionTime();
-          int test2 = currentProcesses[i].RemainingInstructionTime();
-
           processes.at(processCounter[1]) = currentProcesses[i];
 
           processCounter[1]++;
