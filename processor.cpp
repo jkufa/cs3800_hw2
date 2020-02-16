@@ -55,7 +55,10 @@ Computer::Processor & Computer::Processor::operator=(const Computer:: Processor 
 
 void Computer::Processor::Start()
 {
-  unsigned int processCounter = 0; // Track of how many process are left
+  // Track of how many processes are left. Need 2 seperate counters, one
+  // for the current pushing the current processes onto the queue and 
+  // the other for printing the current process number
+  unsigned int processCounter[2] = {0,0}; 
   unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
   unsigned int currentProcessSize;
   int processUnits = rand() % 100 + 1;
@@ -73,47 +76,43 @@ void Computer::Processor::Start()
   std::cout << std::endl;
 
   /* PROCESSING */
-  while(processCounter <  processesInstructions.size() && processUnits > 0) 
+  while(processCounter[0] <  processesInstructions.size() && processUnits > 0) 
   {
     while(currentProcesses.size() < 3 && processRemainder != 0) 
     {
-      if(processRemainder > 3) {
+      if(processRemainder > 3) 
+      {
         for(int i = 0; i < 3; i++) 
         {
-          // Only add 3 processes
-          currentProcesses.push_back(processesInstructions[processCounter]);
+          // Add the next 3 current processes to queue
+          currentProcesses.push_back(processesInstructions[processCounter[0]]);
+          processCounter[0]++;
+          processRemainder--;
         }
-        /*Run ProcessUnit */
-        for(int i = 0; i < currentProcesses.size(); i++) 
-        {
-          currentProcesses[i].StartProcessing();
-          bool test = currentProcesses[i].ProcessUnit(processUnits);
-          std::cout << "Process - " << processes[processCounter].Id() << " processing..." <<std::endl;
-          processCounter++;
-        }
-        processRemainder--;
       }
-      else 
+      else
       {
-        for(unsigned int i = 0; i < processRemainder; i++) 
+        for(int i = 0; i < processRemainder; i++) 
         {
-          currentProcesses.push_back(processesInstructions[processCounter]);
+          // Add remaining processes to queue
+          currentProcesses.push_back(processesInstructions[processCounter[0]]);
+          processCounter[0]++;
+          processRemainder--;
         }
-        /*Run ProcessUnit */
+      }
+
+      /*Run ProcessUnit */
+      bool doneProcessing = false;
+      while(doneProcessing == false)
+      {
         for(int i = 0; i < currentProcesses.size(); i++) 
         {
-          currentProcesses[i].StartProcessing();
-          bool test = currentProcesses[i].ProcessUnit(processUnits);
-          std::cout << "Process - " << processes[processCounter].Id() << " processing..." <<std::endl;
-          processCounter++;
+            currentProcesses[i].StartProcessing();
+            doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
+            std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
+            processCounter[1]++;
         }
-        processRemainder--;
       }
-      // /*Run ProcessUnit */
-      // for(int i = 0; i < currentProcesses.size(); i++) {
-      //   while(currentProcesses[i].ProcessUnit(processUnits)) {
-      //   }
-      // }
 
       /* Erase current processes once they're finished */
       currentProcessSize = currentProcesses.size();
