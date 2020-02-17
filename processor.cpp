@@ -60,7 +60,7 @@ void Computer::Processor::Start()
   // printing the current process number
   unsigned int processCounter[2] = {0,0}; 
   unsigned int processRemainder = processesInstructions.size(); // Track how many processes are left
-  int processUnits;
+  unsigned long processUnits;
   bool allProcessesDone = false;
   // Only 3 processes at a time
   std::vector<int> currentProcesses;
