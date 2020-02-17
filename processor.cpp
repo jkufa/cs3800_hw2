@@ -63,9 +63,9 @@ void Computer::Processor::Start()
   int processUnits;
   bool allProcessesDone = false;
   // Only 3 processes at a time
-  std::vector<Computer::Process> currentProcesses; 
+  std::vector<int> currentProcesses;
   // When processes don't get finished they go here
-  std::vector<Computer::Process> priorityQueue; 
+  std::vector<int> priorityQueue;
   //Construct process
   std::vector<Computer::Process> processes; 
 
@@ -108,7 +108,7 @@ void Computer::Processor::Start()
           for(int i = 0; i < availableThreads; i++) 
           {
             // Add the next 3 current processes to queue
-            currentProcesses.push_back(processesInstructions[processCounter[0]]);
+            currentProcesses.push_back(processCounter[0]); // get index of current processes
 
             processCounter[0]++;
             processRemainder--;
@@ -120,7 +120,7 @@ void Computer::Processor::Start()
           for(unsigned int i = 0; i < processRemainder; i++) 
           {
             // Add remaining processes to queue
-            currentProcesses.push_back(processesInstructions[processCounter[0]]);
+            currentProcesses.push_back(processCounter[0]); // get index of current processes
 
             processCounter[0]++;
             processRemainder--;
@@ -136,18 +136,19 @@ void Computer::Processor::Start()
       }
       for(unsigned int i = 0; i < currentProcesses.size(); i++) 
       {
-          currentProcesses[i].StartProcessing();
+          // currentProcesses[i].StartProcessing();
+          processes[currentProcesses[i]].StartProcessing();
           std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
-          doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
+          // doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
+          doneProcessing = processes[currentProcesses[i]].ProcessUnit(processUnits);
           if(!doneProcessing) 
           {
             // Keep process in queue and update remianing instructions
             priorityQueue.push_back(currentProcesses[i]);
-            priorityQueue[i].StopProcessing();
+            // priorityQueue[i].StopProcessing();
+            processes[currentProcesses[i]].StopProcessing();
           }
-          currentProcesses[i].StopProcessing();
-          // Ammend instruction times
-          processes.at(processCounter[1]) = currentProcesses[i];
+          processes[currentProcesses[i]].StopProcessing();
 
           processCounter[1]++;
 
