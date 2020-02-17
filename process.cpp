@@ -41,7 +41,7 @@ Computer::Process & Computer::Process::operator=(const Computer::Process & copy)
 // Ostream
 std::ostream & Computer::operator<<(std::ostream & out, const Computer::Process & p)
 {
-  std::cout << "Process - " << p.Id() << ": " << p.NumInstructionsLeft() << " " 
+  std::cout << "Process - " << p.Id() << ":\t" << p.NumInstructionsLeft() << "\t" 
     << p.RemainingInstructionTime() << "/" << p.TotalInstructionTime() << std::endl;
   return out;
 }

@@ -3,8 +3,8 @@
  */
 #include "processor.h"
 #include <iostream>
-#include <thread>
 #include <fstream>
+#include <thread>
 
 Computer::Processor::Processor(const std::string & filename)
 {
@@ -64,22 +64,26 @@ void Computer::Processor::Start()
   bool allProcessesDone = false;
   // Only 3 processes at a time
   std::vector<int> currentProcesses;
-  // When processes don't get finished they go here
+  // When processes don't get finished their index goes here
   std::vector<int> priorityQueue;
   //Construct process
   std::vector<Computer::Process> processes; 
+  std::vector<std::thread> threads;
 
+  for(int i = 0; i < processesInstructions.size(); i++) 
+  {
+    // Create list of processes
+    processes.push_back(processesInstructions[i]);
+  }
   while(!allProcessesDone) 
   {
     // Seed PUs
     processUnits = rand() % 100 + 1;
-
     std::cout << "----- " << processUnits << " Pus ------ " << std::endl;
 
     // Create list of processes with values
     for(unsigned int i = 0; i < processesInstructions.size(); i++) 
     {
-      processes.push_back(processesInstructions[i]);
       std::cout << processes[i];  // Output all processes
     }
     std::cout << std::endl;
@@ -130,35 +134,35 @@ void Computer::Processor::Start()
 
       /*Run ProcessUnit */
       bool doneProcessing = false;
-      std::vector<int> processIds;
-      for(int i = 0; i < processes.size(); i++) {
-        processIds.push_back(i);
-      }
       for(unsigned int i = 0; i < currentProcesses.size(); i++) 
       {
-          // currentProcesses[i].StartProcessing();
-          processes[currentProcesses[i]].StartProcessing();
-          std::cout << "Process - " << processes[processCounter[1]].Id() << " processing..." <<std::endl;
-          // doneProcessing = currentProcesses[i].ProcessUnit(processUnits);
-          doneProcessing = processes[currentProcesses[i]].ProcessUnit(processUnits);
-          if(!doneProcessing) 
-          {
-            // Keep process in queue and update remianing instructions
-            priorityQueue.push_back(currentProcesses[i]);
-            // priorityQueue[i].StopProcessing();
-            processes[currentProcesses[i]].StopProcessing();
-          }
+        processes[currentProcesses[i]].StartProcessing();
+        std::cout << "Process - " << processes[currentProcesses[i]].Id() << " processing..." <<std::endl;
+        // doneProcessing = processes[currentProcesses[i]].ProcessUnit(processUnits);
+        threads.push_back(std::thread (&Process::ProcessUnit, std::ref(currentProcesses[i]), std::ref(processUnits)));
+        if(!doneProcessing) 
+        {
+          // Keep process in queue and update remianing instructions
+          priorityQueue.push_back(currentProcesses[i]);
           processes[currentProcesses[i]].StopProcessing();
+        }
+        processes[currentProcesses[i]].StopProcessing();
 
-          processCounter[1]++;
-
+        processCounter[1]++;
       }
       // Decrement counter by the number of unfinished processes
-      processCounter[1] = processCounter[1] - priorityQueue.size();
-      // Erase current processes once they're finished
+      // ERROR: counter doesnt account for unsequential indexes
+      processCounter[1] = processCounter[1] - priorityQueue.size(); 
+      // Clear current processes & threads once they're finished
       currentProcesses.clear();
+      threads.clear();
       // Reset PUs
       processUnits = 0;
+      // Join threads
+      for (int j=0; j < currentProcesses.size(); j++)
+        {
+            threads[j].join();            
+        }
       // Check to see if all processes have been completed
       if(processCounter[1] == processesInstructions.size()) 
       {
