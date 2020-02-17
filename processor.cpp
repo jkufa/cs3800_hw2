@@ -99,8 +99,8 @@ void Computer::Processor::Start()
         for(int i = 0; i < currentQueueSize; i++) 
         {
           currentProcesses.push_back(priorityQueue.front());
-          priorityQueue.erase(priorityQueue.begin());
         }
+        priorityQueue.clear();
       }
       // Get 3 processes running
       while(currentProcesses.size() < 3 && processRemainder != 0) 
@@ -138,8 +138,12 @@ void Computer::Processor::Start()
       {
         processes[currentProcesses[i]].StartProcessing();
         std::cout << "Process - " << processes[currentProcesses[i]].Id() << " processing..." <<std::endl;
-        // doneProcessing = processes[currentProcesses[i]].ProcessUnit(processUnits);
-        threads.push_back(std::thread (&Process::ProcessUnit, std::ref(currentProcesses[i]), std::ref(processUnits)));
+        doneProcessing = processes[currentProcesses[i]].ProcessUnit(processUnits);
+        // threads.push_back(std::thread (&Process::ProcessUnit, std::ref(currentProcesses[i]), std::ref(processUnits)));
+        // for (int j=0; j < currentProcesses.size(); j++)
+        //   {
+        //       threads[j].join();            
+        //   }
         if(!doneProcessing) 
         {
           // Keep process in queue and update remianing instructions
@@ -159,10 +163,6 @@ void Computer::Processor::Start()
       // Reset PUs
       processUnits = 0;
       // Join threads
-      for (int j=0; j < currentProcesses.size(); j++)
-        {
-            threads[j].join();            
-        }
       // Check to see if all processes have been completed
       if(processCounter[1] == processesInstructions.size()) 
       {

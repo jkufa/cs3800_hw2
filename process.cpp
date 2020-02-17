@@ -60,7 +60,6 @@ bool Computer::Process::ProcessUnit(unsigned long pu)
 {
   unsigned long pu_remainder = pu;
   bool isFinished = Finished();
-  currInstruction = 0; // Track # of instructions 
   while(pu_remainder > 0 && !isFinished) 
   {
     pu_remainder = instructions[currInstruction].Process(pu_remainder);
